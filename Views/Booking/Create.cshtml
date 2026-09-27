@@ -1,0 +1,185 @@
+﻿@model movie_booking.Models.booking
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success">
+        @ViewBag.Message
+    </div>
+}
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+
+<h2>Create Booking</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <h4>Booking</h4>
+        <hr />
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <!-- CATEGORY -->
+
+        <div class="form-group">
+
+            @Html.LabelFor(
+                model => model.Cat_ID,
+                "Category",
+                new { @class = "control-label col-md-2" }
+            )
+
+            <div class="col-md-10">
+
+                <select id="Cat_ID"
+                        name="Cat_ID"
+                        class="form-control"
+                        onchange="window.location.href='@Url.Action("Create", "Booking")?Cat_ID=' + this.value;">
+
+                    <option value="">-- Select Category --</option>
+
+                    @if (ViewBag.CategoryList != null)
+                    {
+                        foreach (var item in ViewBag.CategoryList)
+                        {
+                            <option value="@item.Value"
+                                    @(item.Value == Model.Cat_ID.ToString() ? "selected" : "")>
+                                @item.Text
+                            </option>
+                        }
+                    }
+
+                </select>
+
+            </div>
+        </div>
+
+
+        <!-- MOVIE -->
+
+        <div class="form-group">
+
+            @Html.LabelFor(
+                model => model.Movie_ID,
+                "Movie Name",
+                new { @class = "control-label col-md-2" }
+            )
+
+            <div class="col-md-10">
+
+                <select id="Movie_ID"
+                        name="Movie_ID"
+                        class="form-control"
+                        onchange="window.location.href='@Url.Action("Create", "Booking")?Cat_ID=@Model.Cat_ID&Movie_ID=' + this.value;">
+
+                    <option value="">-- Select Movie --</option>
+
+                    @if (ViewBag.MovieList != null)
+                    {
+                        foreach (var item in ViewBag.MovieList)
+                        {
+                            <option value="@item.Value"
+                                    @(item.Value == Model.Movie_ID.ToString() ? "selected" : "")>
+                                @item.Text
+                            </option>
+                        }
+                    }
+
+                </select>
+
+            </div>
+        </div>
+
+
+        <!-- NUMBER OF TICKETS -->
+
+        <div class="form-group">
+
+            @Html.LabelFor(
+                model => model.no_tickets,
+                "No Of Tickets",
+                new { @class = "control-label col-md-2" }
+            )
+
+            <div class="col-md-10">
+
+                <input type="number"
+                       id="no_tickets"
+                       name="no_tickets"
+                       class="form-control"
+                       min="1"
+                       value="@Model.no_tickets"
+                       onchange="window.location.href='@Url.Action("Create", "Booking")?Cat_ID=@Model.Cat_ID&Movie_ID=@Model.Movie_ID&no_tickets=' + this.value;" />
+
+                @Html.ValidationMessageFor(
+                    model => model.no_tickets,
+                    "",
+                    new { @class = "text-danger" }
+                )
+
+            </div>
+        </div>
+
+
+        <!-- AMOUNT -->
+
+        <div class="form-group">
+
+            @Html.LabelFor(
+                model => model.amount,
+                "Amount",
+                new { @class = "control-label col-md-2" }
+            )
+
+            <div class="col-md-10">
+
+                <input type="text"
+                       class="form-control"
+                       value="@ViewBag.TotalPrice"
+                       readonly />
+
+                <input type="hidden"
+                       name="amount"
+                       value="@Model.amount" />
+
+            </div>
+        </div>
+
+
+        <!-- SUBMIT -->
+
+        <div class="form-group">
+
+            <div class="col-md-offset-2 col-md-10">
+
+                <input type="submit"
+                       value="Create"
+                       class="btn btn-primary" />
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Details")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

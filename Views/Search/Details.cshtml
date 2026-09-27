@@ -1,0 +1,93 @@
+﻿
+@model IEnumerable<movie_booking.Models.Movie>
+
+@{
+    ViewBag.Title = "Movie Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Movie Search</h2>
+
+<hr />
+
+@using (Html.BeginForm("Details", "Search", FormMethod.Get))
+{
+    <div class="form-group">
+
+        <label>Select Category</label>
+
+        @Html.DropDownList(
+            "cat_id",
+            new SelectList(
+                ViewBag.CategoryList,
+                "Value",
+                "Text",
+                ViewBag.SelectedCatId
+            ),
+            "-- Select Category --",
+            new { @class = "form-control" }
+        )
+
+    </div>
+
+    <br />
+
+    <button type="submit" class="btn btn-primary">
+        Search
+    </button>
+}
+
+<br />
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered table-striped">
+
+        <thead>
+            <tr>
+                <th>Movie ID</th>
+                <th>Movie Name</th>
+                <th>Release Date</th>
+                <th>Category ID</th>
+                <th>Rate</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var movie in Model)
+            {
+                <tr>
+                    <td>
+                        @movie.Movie_ID
+                    </td>
+
+                    <td>
+                        @movie.Movie_name
+                    </td>
+
+                    <td>
+                        @(movie.Release_Date.HasValue
+                            ? movie.Release_Date.Value.ToString("dd-MM-yyyy")
+                            : "")
+                    </td>
+
+                    <td>
+                        @movie.Cat_ID
+                    </td>
+
+                    <td>
+                        @movie.rate
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+}
+else
+{
+    <p>No movies found. Please select a category.</p>
+}
+
